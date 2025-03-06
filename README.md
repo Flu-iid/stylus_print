@@ -4,4 +4,4 @@ costumizable text view and progress bar
 
 # ideas
 
-- add text preview
+- make class base to combine cursor and text
