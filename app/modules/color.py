@@ -1,14 +1,6 @@
-"""String coloring module"""
+"""Text coloring module"""
 
 from typing import Literal
-
-color_dict = {
-    "red": "\x1b[31m",
-    "green": "\x1b[32m",
-    "yellow": "\x1b[33m",
-    "blue": "\x1b[34m",
-    "reset": "\x1b[0m",
-}
 
 
 def color_decorator(color_choice: Literal["red", "green", "yellow", "blue"]):
@@ -18,7 +10,11 @@ def color_decorator(color_choice: Literal["red", "green", "yellow", "blue"]):
 
     def outer_wrapper(fn):
         def inner_wrapper(*args, **kwargs):
-            return color_dict[color_choice] + fn(*args, **kwargs) + color_dict["reset"]
+            return (
+                Color.color_dict[color_choice]
+                + fn(*args, **kwargs)
+                + Color.color_dict["none"]
+            )
 
         return inner_wrapper
 
@@ -26,7 +22,39 @@ def color_decorator(color_choice: Literal["red", "green", "yellow", "blue"]):
 
 
 class Color:
-    pass
+    """Class for modifying text color representation."""
+
+    color_dict = {
+        "red": "\x1b[31m",
+        "green": "\x1b[32m",
+        "yellow": "\x1b[33m",
+        "blue": "\x1b[34m",
+        "none": "\x1b[0m",
+    }
+
+    color_names = list(color_dict.keys())
+
+    def __init__(
+        self,
+        color_choice: Literal["red", "green", "yellow", "blue", "none"] | None = None,
+    ) -> None:
+        self.__color__ = color_choice if color_choice else "none"
+
+    def all(self, text: str) -> str:
+        """Changing colors of all charecters"""
+        return self.color_dict[self.__color__] + text + self.color_dict["none"]
+
+    def one_by_one(self, text) -> str:
+        """Applying sequence of colors to each charecter of text"""
+        color_count = len(self.color_names)
+        cur_i = 0
+        colored_list = []
+        for c in text:
+            colored_list.append(
+                self.color_dict[self.color_names[cur_i]] + c + self.color_dict["none"]
+            )
+            cur_i = (cur_i + 1) % color_count
+        return "".join(colored_list)
 
 
 if __name__ == "__main__":
@@ -36,3 +64,7 @@ if __name__ == "__main__":
         return a
 
     print("\033[7m" + color_test("Hows this look like?!"))
+
+    my_color = Color()
+    test_result = my_color.one_by_one("hello world")
+    print(test_result)
