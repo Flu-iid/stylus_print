@@ -44,10 +44,10 @@ class Color:
         """Changing colors of all charecters"""
         return self.color_dict[self.__color__] + text + self.color_dict["none"]
 
-    def one_by_one(self, text) -> str:
+    def one_by_one(self, text, index_input: int | None = None) -> str:
         """Applying sequence of colors to each charecter of text"""
         color_count = len(self.color_names)
-        cur_i = 0
+        cur_i = index_input if index_input else 0
         colored_list = []
         for c in text:
             colored_list.append(
