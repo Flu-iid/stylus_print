@@ -1,25 +1,100 @@
 from time import sleep, time
 from typing import Literal, Optional
-from app.modules.color import color_dict
+# from app.modules.color import color_dict
 
 
 class Cursor:
+    """Class representation of Cursor\n
+    default sequences:
+        0: "|"
+        1: "█"
+        2: "⚬"
+        3: "■"
+        4: "⣾"
+        5: "⠁"
+    """
+
     sequence_default_dict = {
         0: ["|", "/", "-", "\\"],
         1: ["█", " "],
         2: ["⚬", "⚭", "⚮", "⚯", "⚮", "⚭", "⚬"],
         3: ["■", "□", "▪", "▫"],
         4: ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"],
+        5: ["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"],
     }
 
     def __init__(
         self,
-        sequence: Optional[list[str]] = None,
+        sequence: Optional[list[str] | int] = None,
         interval: float = 0.1,
         position: Literal["leading", "trailing", "below"] = "trailing",
         blink_mode: Literal["always", "during_print", "post_print"] = "always",
-        color: Optional[str] = None,  # make Color obj
-        offset: int = 0,
-        reset_after: bool = True,  # hide after animation
+        color: Optional[str] = None,  # add Color instance to cursor representation
+        offset: int = 0,  # cursor offset from text
+        stop: bool = False,  # hide after animation
     ) -> None:
-        pass
+        # self.__sequence__ = None
+        # self.__shape__ =
+        self.add_sequence(sequence)
+        self.__interval__ = interval
+        self.position = position
+        self.blink_mode = blink_mode
+        self.color = color
+        self.offset = offset
+        self.stop = stop
+
+    def __str__(self) -> str:
+        """String representation of the instance"""
+        return f"<Cursor Object> current shape: {self.__shape__}"  # needs fixing
+
+    def add_sequence(self, sequence: Optional[list[str] | int] = None) -> None:
+        """
+        add or change current sequence by adding new sequence or choose from defualt ones.\n
+        default sequences:
+        0: "|"
+        1: "█"
+        2: "⚬"
+        3: "■"
+        4: "⣾"
+        5: "⠁"
+        """
+        # add right sequence to instance
+        sequence = sequence if sequence else self.sequence_default_dict[0]
+        try:
+            if isinstance(sequence, list):
+                self.__sequence__ = sequence
+            elif isinstance(sequence, int):
+                self.__sequence__ = self.sequence_default_dict[sequence]
+            else:
+                raise ValueError
+        except ValueError:
+            print("Bad Sequence input")
+        else:
+            self.__shape__: list[str, int] = [
+                self.__sequence__[0],
+                0,
+            ]  # shape and index pair list
+
+    def next_shape(self, index: Optional[int] = None) -> str:
+        """Selecting next shape from sequence."""
+        cur_shape_index = index if isinstance(index, int) else self.__shape__[1]
+        n_shape_index = (cur_shape_index + 1) % len(self.__sequence__)
+        n_shape = self.__sequence__[n_shape_index]  # next_shape
+        self.__shape__ = n_shape, n_shape_index
+        return n_shape
+
+    def run(self) -> None:
+        """Standalone cursor sequence representation"""
+        while not self.stop:
+            cur_shape = self.__shape__[0]  # current shape
+            print(self.offset * " ", cur_shape, sep="", end="\r")
+            sleep(self.__interval__)
+            cur_shape = self.next_shape()
+
+
+# fix positioning, blink_mode, and color
+
+if __name__ == "__main__":
+    my_cursor = Cursor(sequence=4, offset=12)
+    my_cursor.run()
+    # make self.stop work with async
