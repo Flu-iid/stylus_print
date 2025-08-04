@@ -1,6 +1,6 @@
 from time import sleep, time
 from typing import Literal, Optional
-# from app.modules.color import color_dict
+from color import Color
 
 
 class Cursor:
@@ -29,7 +29,7 @@ class Cursor:
         interval: float = 0.1,
         position: Literal["leading", "trailing", "below"] = "trailing",
         blink_mode: Literal["always", "during_print", "post_print"] = "always",
-        color: Optional[str] = None,  # add Color instance to cursor representation
+        have_color: bool = False,  # add Color instance to cursor representation
         offset: int = 0,  # cursor offset from text
         stop: bool = False,  # hide after animation
     ) -> None:
@@ -39,7 +39,7 @@ class Cursor:
         self.__interval__ = interval
         self.position = position
         self.blink_mode = blink_mode
-        self.color = color
+        self.cursor_color = Color("red") if have_color else None
         self.offset = offset
         self.stop = stop
 
@@ -80,11 +80,34 @@ class Cursor:
         cur_shape_index = index if isinstance(index, int) else self.__shape__[1]
         n_shape_index = (cur_shape_index + 1) % len(self.__sequence__)
         n_shape = self.__sequence__[n_shape_index]  # next_shape
+        if self.cursor_color:
+            n_shape, n_color_index = self.cursor_color.one_by_one_char(
+                n_shape, self.cursor_color.next_color_index
+            )
+            self.cursor_color.next_color_index = n_color_index
         self.__shape__ = n_shape, n_shape_index
         return n_shape
 
+    def color_config(
+        self,
+        color_choice: Literal["red", "green", "yellow", "blue", "none"],
+        style: Literal["all", "one-by-one", "one-by-one-char"] = "all",
+    ) -> None:
+        """Adds color to cursor shapes."""
+        self.cursor_color.color_choice = color_choice
+        self.cursor_color.color_style = style
+        # match style:
+        #     case "all":
+        #         pass
+        #     case "one-by-one":
+        #         pass
+        #     case "one-by-one-char":
+        #         pass
+        #     case _:
+        #         raise ValueError  # needs error handling
+
     def run(self) -> None:
-        """Standalone cursor sequence representation"""
+        """Standalone cursor sequence representation."""
         while not self.stop:
             cur_shape = self.__shape__[0]  # current shape
             print(self.offset * " ", cur_shape, sep="", end="\r")
@@ -92,9 +115,10 @@ class Cursor:
             cur_shape = self.next_shape()
 
 
-# fix positioning, blink_mode, and color
+# fix positioning, blink_mode
+# turn shape into class
 
 if __name__ == "__main__":
-    my_cursor = Cursor(sequence=4, offset=12)
+    my_cursor = Cursor(sequence=4, offset=12, have_color=True)
     my_cursor.run()
     # make self.stop work with async
