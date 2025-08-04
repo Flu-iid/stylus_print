@@ -33,28 +33,38 @@ class Color:
     }
 
     color_names = list(color_dict.keys())
+    color_styles = ["all", "one-by-one", "one-by-one-char"]
 
     def __init__(
         self,
         color_choice: Literal["red", "green", "yellow", "blue", "none"] | None = None,
     ) -> None:
-        self.__color__ = color_choice if color_choice else "none"
+        self.color_choice = color_choice if color_choice else "none"
+        self.next_color_index = 0  # for one by one char func
 
     def all(self, text: str) -> str:
         """Changing colors of all charecters"""
-        return self.color_dict[self.__color__] + text + self.color_dict["none"]
+        self.color_style = "all"
+        return self.color_dict[self.color_choice] + text + self.color_dict["none"]
 
-    def one_by_one(self, text, index_input: int | None = None) -> str:
+    def one_by_one(self, text, index: int = 0) -> str:
         """Applying sequence of colors to each charecter of text"""
+        self.color_style = "one-by-one"
         color_count = len(self.color_names)
-        cur_i = index_input if index_input else 0
         colored_list = []
         for c in text:
-            colored_list.append(
-                self.color_dict[self.color_names[cur_i]] + c + self.color_dict["none"]
-            )
-            cur_i = (cur_i + 1) % color_count
+            colored_list.append(self.color_dict[self.color_names[index]] + c)
+            index = (index + 1) % color_count
         return "".join(colored_list)
+
+    def one_by_one_char(self, char: str, color_index: int = 0) -> tuple[str, int]:
+        """Applying color for one charecter. returning modifed charecter and next color_index"""
+        self.color_style = "one-by-one-char"
+        color_count = len(self.color_names)
+        self.next_color_index = (color_index + 1) % color_count
+        return self.color_dict[
+            self.color_names[color_index]
+        ] + char, self.next_color_index
 
 
 if __name__ == "__main__":
