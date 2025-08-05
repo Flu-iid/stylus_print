@@ -38,18 +38,26 @@ class Color:
     def __init__(
         self,
         color_choice: Literal["red", "green", "yellow", "blue", "none"] | None = None,
+        color_style: Literal["all", "rainbow", "rainbow-char"] = "all",
     ) -> None:
         self.color_choice = color_choice if color_choice else "none"
+        self.color_mapped_fn = [
+            self._all,
+            self._rainbow,
+            self._rainbow_char,
+        ]  # mapped fn
+        self.color_map = dict(zip(self.color_styles, self.color_mapped_fn))
+        self.color_style = self._choose_style(color_style)
         self.next_color_index = 0  # for one by one char func
 
-    def all(self, text: str) -> str:
+    def _all(self, text: str) -> str:
         """Changing colors of all charecters"""
-        self.color_style = "all"
+        # self.color_style = "all"
         return self.color_dict[self.color_choice] + text + self.color_dict["none"]
 
-    def rainbow(self, text, index: int = 0) -> str:
+    def _rainbow(self, text, index: int = 0) -> str:
         """Applying sequence of colors to each charecter of text"""
-        self.color_style = "rainbow"
+        # self.color_style = "rainbow"
         color_count = len(self.color_names)
         colored_list = []
         for c in text:
@@ -57,14 +65,26 @@ class Color:
             index = (index + 1) % color_count
         return "".join(colored_list)
 
-    def rainbow_char(self, char: str, color_index: int = 0) -> tuple[str, int]:
+    def _rainbow_char(self, char: str, color_index: int = 0) -> tuple[str, int]:
         """Applying color for one charecter. returning modifed charecter and next color_index"""
-        self.color_style = "rainbow-char"
+        # self.color_style = "rainbow-char"
         color_count = len(self.color_names)
         self.next_color_index = (color_index + 1) % color_count
         return self.color_dict[
             self.color_names[color_index]
         ] + char, self.next_color_index
+
+    def _choose_style(
+        self,
+        color_style: Literal["all", "rainbow", "rainbow-char"] | None = None,
+    ) -> None:
+        color_style = color_style or self.color_style
+        if color_style not in self.color_styles:
+            pass
+            # raise error, wrong style
+        else:
+            self.paint = self.color_map[color_style]
+        return color_style
 
 
 if __name__ == "__main__":
@@ -75,6 +95,6 @@ if __name__ == "__main__":
 
     print("\033[7m" + color_test("Hows this look like?!"))
 
-    my_color = Color()
-    test_result = my_color.rainbow("hello world")
+    my_color = Color(color_style="rainbow")
+    test_result = my_color.paint("hello world")
     print(test_result)
