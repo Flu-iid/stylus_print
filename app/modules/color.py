@@ -33,7 +33,7 @@ class Color:
     }
 
     color_names = list(color_dict.keys())
-    color_styles = ["all", "one-by-one", "one-by-one-char"]
+    color_styles = ["all", "rainbow", "rainbow-char"]
 
     def __init__(
         self,
@@ -47,9 +47,9 @@ class Color:
         self.color_style = "all"
         return self.color_dict[self.color_choice] + text + self.color_dict["none"]
 
-    def one_by_one(self, text, index: int = 0) -> str:
+    def rainbow(self, text, index: int = 0) -> str:
         """Applying sequence of colors to each charecter of text"""
-        self.color_style = "one-by-one"
+        self.color_style = "rainbow"
         color_count = len(self.color_names)
         colored_list = []
         for c in text:
@@ -57,9 +57,9 @@ class Color:
             index = (index + 1) % color_count
         return "".join(colored_list)
 
-    def one_by_one_char(self, char: str, color_index: int = 0) -> tuple[str, int]:
+    def rainbow_char(self, char: str, color_index: int = 0) -> tuple[str, int]:
         """Applying color for one charecter. returning modifed charecter and next color_index"""
-        self.color_style = "one-by-one-char"
+        self.color_style = "rainbow-char"
         color_count = len(self.color_names)
         self.next_color_index = (color_index + 1) % color_count
         return self.color_dict[
@@ -76,5 +76,5 @@ if __name__ == "__main__":
     print("\033[7m" + color_test("Hows this look like?!"))
 
     my_color = Color()
-    test_result = my_color.one_by_one("hello world")
+    test_result = my_color.rainbow("hello world")
     print(test_result)

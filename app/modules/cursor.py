@@ -81,7 +81,7 @@ class Cursor:
         n_shape_index = (cur_shape_index + 1) % len(self.__sequence__)
         n_shape = self.__sequence__[n_shape_index]  # next_shape
         if self.cursor_color:
-            n_shape, n_color_index = self.cursor_color.one_by_one_char(
+            n_shape, n_color_index = self.cursor_color.rainbow_char(
                 n_shape, self.cursor_color.next_color_index
             )
             self.cursor_color.next_color_index = n_color_index
@@ -91,7 +91,7 @@ class Cursor:
     def color_config(
         self,
         color_choice: Literal["red", "green", "yellow", "blue", "none"],
-        style: Literal["all", "one-by-one", "one-by-one-char"] = "all",
+        style: Literal["all", "rainbow", "rainbow-char"] = "all",
     ) -> None:
         """Adds color to cursor shapes."""
         self.cursor_color.color_choice = color_choice
@@ -99,9 +99,9 @@ class Cursor:
         # match style:
         #     case "all":
         #         pass
-        #     case "one-by-one":
+        #     case "rainbow":
         #         pass
-        #     case "one-by-one-char":
+        #     case "rainbow-char":
         #         pass
         #     case _:
         #         raise ValueError  # needs error handling
