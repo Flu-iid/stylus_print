@@ -117,8 +117,9 @@ class Cursor:
 
 # fix positioning, blink_mode
 # turn shape into class
+# add reconfigure module
 
 if __name__ == "__main__":
-    my_cursor = Cursor(sequence=4, offset=12, have_color=True)
+    my_cursor = Cursor(sequence=3, offset=12, have_color=True)
     my_cursor.run()
     # make self.stop work with async
