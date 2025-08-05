@@ -41,7 +41,11 @@ class Cursor:
         self.__interval__ = interval
         self.position = position
         self.blink_mode = blink_mode
-        self.cursor_color = Color("red") if have_color else None
+        self.color = (
+            Color(color_choice="red", color_style="rainbow-char")
+            if have_color
+            else None
+        )
         self.offset = offset
         self.stop = stop
 
@@ -61,7 +65,7 @@ class Cursor:
         5: "⠁"
         """
         # add right sequence to instance
-        sequence = sequence if sequence else self.sequence_default_dict[0]
+        sequence = sequence or self.sequence_default_dict[0]
         try:
             if isinstance(sequence, list):
                 self.__sequence__ = sequence
@@ -82,31 +86,26 @@ class Cursor:
         cur_shape_index = index if isinstance(index, int) else self.__shape__[1]
         n_shape_index = (cur_shape_index + 1) % len(self.__sequence__)
         n_shape = self.__sequence__[n_shape_index]  # next_shape
-        if self.cursor_color:
-            n_shape, n_color_index = self.cursor_color.rainbow_char(
-                n_shape, self.cursor_color.next_color_index
+        if self.color:
+            n_shape, n_color_index = self.color.paint(
+                n_shape, self.color.next_color_index
             )
-            self.cursor_color.next_color_index = n_color_index
+            self.color.next_color_index = n_color_index
         self.__shape__ = n_shape, n_shape_index
         return n_shape
+
+    # needs more support for differernt color styles
 
     def color_config(
         self,
         color_choice: Literal["red", "green", "yellow", "blue", "none"],
-        style: Literal["all", "rainbow", "rainbow-char"] = "all",
+        color_style: Literal["all", "rainbow", "rainbow-char"] = "rainbow-char",
     ) -> None:
         """Adds color to cursor shapes."""
-        self.cursor_color.color_choice = color_choice
-        self.cursor_color.color_style = style
-        # match style:
-        #     case "all":
-        #         pass
-        #     case "rainbow":
-        #         pass
-        #     case "rainbow-char":
-        #         pass
-        #     case _:
-        #         raise ValueError  # needs error handling
+        if self.color:
+            del self.color
+        self.color = Color(color_choice=color_choice, color_style=color_style)
+        # add color style to change as well
 
     def run(self) -> None:
         """Standalone cursor sequence representation."""
@@ -118,7 +117,7 @@ class Cursor:
 
 
 # fix positioning, blink_mode
-# turn shape into class
+# turn shape into class (or charecter)
 # add reconfigure module
 
 if __name__ == "__main__":
