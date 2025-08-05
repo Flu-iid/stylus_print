@@ -1,4 +1,4 @@
-"""Text coloring module"""
+"""Coloring module"""
 
 from typing import Literal
 
