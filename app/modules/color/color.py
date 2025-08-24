@@ -1,19 +1,19 @@
 """Coloring module"""
 
-from typing import Literal
+from typing import Literal, Callable
 
 
-def color_decorator(color_choice: Literal["red", "green", "yellow", "blue"]):
+def color_decorator(
+    color_choice: Literal["red", "green", "yellow", "blue", "none"] = "none",
+) -> Callable[..., Callable[..., str]]:
     """color wrapper/decorator for string return functions\n
     containing colors: red, blue, yellow and green.\n
     color resets after each usage."""
 
-    def outer_wrapper(fn):
-        def inner_wrapper(*args, **kwargs):
+    def outer_wrapper(fn) -> Callable[..., str]:
+        def inner_wrapper(*args, **kwargs) -> str:
             return (
-                Color.color_dict[color_choice]
-                + fn(*args, **kwargs)
-                + Color.color_dict["none"]
+                Color.color_dict[color_choice] + fn(*args, **kwargs) + Color.color_clear
             )
 
         return inner_wrapper
@@ -22,9 +22,9 @@ def color_decorator(color_choice: Literal["red", "green", "yellow", "blue"]):
 
 
 class Color:
-    """Class for modifying text color representation."""
+    """Class for modifying text color representation.\n"""
 
-    color_dict = {
+    color_dict: dict[str, str] = {
         "red": "\x1b[31m",
         "green": "\x1b[32m",
         "yellow": "\x1b[33m",
@@ -32,15 +32,25 @@ class Color:
         "none": "\x1b[0m",
     }
 
+    color_clear: str = "\x1b[0m"
+
     color_names = list(color_dict.keys())
-    color_styles = ["all", "rainbow", "rainbow-char"]
+    color_styles: list[str] = ["all", "rainbow", "rainbow-char"]
 
     def __init__(
         self,
         color_choice: Literal["red", "green", "yellow", "blue", "none"] | None = None,
+        color_code: str | None = None,
         color_style: Literal["all", "rainbow", "rainbow-char"] = "all",
     ) -> None:
-        self.color_choice = color_choice if color_choice else "none"
+        self.color_choice: (
+            Literal["red"]
+            | Literal["none"]
+            | Literal["green"]
+            | Literal["yellow"]
+            | Literal["blue"]
+            | None
+        ) = color_code if color_code else color_choice or "none"
         self.color_mapped_fn = [
             self._all,
             self._rainbow,
