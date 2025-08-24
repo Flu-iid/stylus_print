@@ -1,3 +1,4 @@
 /env
-_*
+_test.py
 /test
+__pycache__/
