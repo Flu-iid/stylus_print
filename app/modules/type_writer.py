@@ -2,7 +2,7 @@
 
 from typing import Literal, Optional
 from time import sleep
-from color import Color
+from app.modules.color.color import Color
 
 
 class TypeWriter:

@@ -14,11 +14,11 @@ _Stylus print_ is a library of different modules to make your cli text represent
 
 - Pythonic API: Simple yet powerful interface
 
-# Installation ⚙️
+<!-- # Installation ⚙️
 
 ```python
 pip install stylus-print
-```
+``` -->
 
 # each simple usage explanation
 
