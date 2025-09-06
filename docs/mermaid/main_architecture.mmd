@@ -1,0 +1,18 @@
+graph TB
+    SP[Stylus Print]
+    T[Type_writer]
+    P[Progress_bar]
+    C[cursor]
+    color
+    SP --> T
+    SP --> C
+    SP --> P
+
+    T -.-> color
+    T --> C
+    C -.-> color
+    P --> C
+    P -.-> color
+
+
+    

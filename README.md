@@ -22,6 +22,26 @@ pip install stylus-print
 
 <!-- # each simple usage explanation -->
 
-...
-
 <!-- needs work -->
+
+# Structure
+
+```mermaid
+graph TB
+    SP[Stylus Print]
+    T[type_writer]
+    P[progress_bar]
+    C[cursor]
+    color
+    SP ==> T
+    SP ==> C
+    SP ==> P
+
+    T -.-> color
+    T -.-> C
+    C -.-> color
+    P -.-> C
+    P -.-> color
+```
+
+AS it has been demostrated in the diagram, `type_writer`, `progress_bar` and `cursor` are the main modules and use of `cursor` and `color` modules in other ones is optional.
