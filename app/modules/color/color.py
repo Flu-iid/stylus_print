@@ -4,7 +4,7 @@ from typing import Literal, Callable
 
 
 def color_decorator(
-    color_choice: Literal["red", "green", "yellow", "blue", "none"] = "none",
+    color_choice: Literal["red", "green", "yellow", "blue", "none"] = "red",
 ) -> Callable[..., Callable[..., str]]:
     """color wrapper/decorator for string return functions\n
     containing colors: red, blue, yellow and green.\n
@@ -42,23 +42,17 @@ class Color:
         color_choice: Literal["red", "green", "yellow", "blue", "none"] | None = None,
         color_code: str | None = None,
         color_style: Literal["all", "rainbow", "rainbow-char"] = "all",
+        color_func: Callable | None = None,
     ) -> None:
-        self.color_choice: (
-            Literal["red"]
-            | Literal["none"]
-            | Literal["green"]
-            | Literal["yellow"]
-            | Literal["blue"]
-            | None
-        ) = color_code if color_code else color_choice or "none"
-        self.color_mapped_fn = [
+        self.color_choice: str = color_code if color_code else color_choice or "none"
+        self.color_mapped_fn: list[Callable[[str], str]] = [
             self._all,
             self._rainbow,
             self._rainbow_char,
         ]  # mapped fn
         self.color_map = dict(zip(self.color_styles, self.color_mapped_fn))
-        self.color_style = self._choose_style(color_style)
-        self.next_color_index = 0  # for one by one char func
+        self.color_style = color_func or self._choose_style(color_style)
+        # self.next_color_index = 0  # for one by one char func
 
     def _all(self, text: str) -> str:
         """Changing colors of all charecters"""

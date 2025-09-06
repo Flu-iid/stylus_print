@@ -2,7 +2,7 @@
 
 from time import sleep
 from typing import Literal, Optional
-from color import Color
+from app.modules.color.color import Color
 
 
 class Cursor:
