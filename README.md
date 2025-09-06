@@ -1,18 +1,18 @@
-# stylus_print ✨🖋️
+# Stylus Print ✨🖋️
 
-_Stylus print_ is a library of different modules to make your cli text representation, more alive.
+`stylus_print` is a library of different modules to make your cli text representation, more alive.
 
 # Features 🌟
 
 - Typewriter Effects: Character-by-character text animation
 
-- Cursor Customization: 8+ built-in cursor styles with animation
+- Cursor Customization: built-in cursor styles with animation
 
-- Color Support: 256-color palette and gradient effects
+- Color Support: color palettes based on ansi escape_chars
 
 - Multi-Speed Control: Adjustable character delay
 
-- Pythonic API: Simple yet powerful interface
+<!-- - Pythonic API: Simple yet powerful interface -->
 
 <!-- # Installation ⚙️
 
@@ -20,7 +20,7 @@ _Stylus print_ is a library of different modules to make your cli text represent
 pip install stylus-print
 ``` -->
 
-# each simple usage explanation
+<!-- # each simple usage explanation -->
 
 ...
 

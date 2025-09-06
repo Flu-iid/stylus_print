@@ -1,0 +1,1 @@
+- maybe consider to add support for other projects like "Click Typer Rich"
