@@ -1,6 +1,6 @@
 """Coloring module"""
 
-from typing import Literal, Callable
+from typing import Literal, Callable, Any
 
 
 def color_decorator(
@@ -44,14 +44,16 @@ class Color:
         color_style: Literal["all", "rainbow", "rainbow-char"] = "all",
         color_func: Callable | None = None,
     ) -> None:
-        self.color_choice: str = color_code if color_code else color_choice or "none"
+        self.color_choice: str = color_code or color_choice or "none"
         self.color_mapped_fn: list[Callable[[str], str]] = [
             self._all,
             self._rainbow,
             self._rainbow_char,
         ]  # mapped fn
         self.color_map = dict(zip(self.color_styles, self.color_mapped_fn))
-        self.color_style = color_func or self._choose_style(color_style)
+        self.color_style: Callable[..., Any] = color_func or self._choose_style(
+            color_style
+        )
         # self.next_color_index = 0  # for one by one char func
 
     def _all(self, text: str) -> str:
