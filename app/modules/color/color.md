@@ -10,7 +10,7 @@ color object will consist of below arguments:
 
 - `color_style` (`str | None`): coloring style for each iteration of the object. choices are ["all", "rainbow", "rainbow-char"]. if needed more midfication for coloring you can give function as keyword argument to `color_func`.
 
-- `color_func` (`function | None`): Specify if you need specific coloring function for each iteration at higher level modules. if given value, will overwrite `color_style`.
+- `color_func` (`function | None`): Specify if you need specific coloring function for each iteration at higher level modules. if given value, will overwrite `color_style`. supports lambda functions [`index_condition`, `char_condition = True`] (2nd var for lambda as char_condition is optional).
 
 ```mermaid
 
